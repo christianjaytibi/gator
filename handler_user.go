@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/christianjaytibi/gator/internal/database"
 	"github.com/google/uuid"
@@ -50,5 +51,18 @@ func handleRegister(s *state, cmd command) error {
 	}
 
 	fmt.Println("user created!")
+	return nil
+}
+
+func handleReset(s *state, cmd command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("usage: %s", cmd.Name)
+	}
+
+	ctx := context.Background()
+	if err := s.db.DeleteAllAuthors(ctx); err != nil {
+		log.Fatalf("Reset unsuccessful: %v", err)
+	}
+
 	return nil
 }
