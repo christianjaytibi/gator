@@ -66,3 +66,26 @@ func handleReset(s *state, cmd command) error {
 
 	return nil
 }
+
+func handleListUserNames(s *state, cmd command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("usage: %s", cmd.Name)
+	}
+
+	ctx := context.Background()
+	usernames, err := s.db.ListUserNames(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, name := range usernames {
+		fmt.Printf("* %s ", name)
+		if name == s.cfg.CurrentUserName {
+			fmt.Printf("(current)")
+		}
+
+		fmt.Printf("\n")
+	}
+
+	return nil
+}

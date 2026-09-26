@@ -12,3 +12,7 @@ WHERE
 
 -- name: DeleteAllAuthors :exec
 DELETE FROM users;
+
+-- name: ListUserNames :many
+SELECT name
+FROM users;
