@@ -1,13 +1,17 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
 	"github.com/christianjaytibi/gator/internal/config"
+	"github.com/christianjaytibi/gator/internal/database"
+	_ "github.com/lib/pq"
 )
 
 type state struct {
+	db  *database.Queries
 	cfg *config.Config
 }
 
@@ -17,7 +21,15 @@ func main() {
 		log.Fatalf("error reading config: %v", err)
 	}
 
+	db, err := sql.Open("postgres", cfg.DbUrl)
+	if err != nil {
+		log.Fatalf("error connecting to db: %v", err)
+	}
+	defer db.Close()
+	dbQueries := database.New(db)
+
 	appState := state{
+		db:  dbQueries,
 		cfg: &cfg,
 	}
 
@@ -25,6 +37,7 @@ func main() {
 		registeredCommands: make(map[string]func(*state, command) error),
 	}
 	appCommands.register("login", handlerLogin)
+	appCommands.register("register", handleRegister)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: gator <command> [args...]")
