@@ -40,6 +40,7 @@ func main() {
 	appCommands.register("register", handleRegister)
 	appCommands.register("reset", handleReset)
 	appCommands.register("users", handleListUserNames)
+	appCommands.register("agg", handlerAgg)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: gator <command> [args...]")
