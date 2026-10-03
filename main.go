@@ -41,10 +41,10 @@ func main() {
 	appCommands.register("reset", handleReset)
 	appCommands.register("users", handleListUserNames)
 	appCommands.register("agg", handlerAgg)
-	appCommands.register("addfeed", handleAddFeed)
+	appCommands.register("addfeed", middlewareLoggedIn(handleAddFeed))
 	appCommands.register("feeds", handleListFeeds)
-	appCommands.register("follow", handleFollow)
-	appCommands.register("following", handleListFeedFollows)
+	appCommands.register("follow", middlewareLoggedIn(handleFollow))
+	appCommands.register("following", middlewareLoggedIn(handleListFeedFollows))
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: gator <command> [args...]")
